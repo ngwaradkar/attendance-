@@ -1,0 +1,36 @@
+ID,Module,Scenario,Expected Result,Actual Result,Status,Severity
+TC-01,Auth,Login with valid admin credentials,Admin workspace opened with full navigation,Admin dashboard opened with all 14 pages,PASS,Critical
+TC-02,Auth,Login with valid teacher credentials,Teacher workspace opened with scoped navigation,Teacher dashboard opened with 5 scoped pages,PASS,Critical
+TC-03,Auth,Login with wrong password,Authentication rejected with error message,Login rejected with invalid credentials message,PASS,High
+TC-04,Auth,Login with empty or blank username,Login blocked with validation error,Rejected without database query,PASS,Medium
+TC-05,Auth,Login with deactivated teacher account,Login rejected,Deactivated account denied access,PASS,High
+TC-06,Auth,Password hashing algorithm,PBKDF2-HMAC-SHA256 with 260000 rounds and salt,PBKDF2-HMAC-SHA256 verified,PASS,High
+TC-07,Auth,Failed login throttling after 5 attempts,Temporary 60-second block,Throttling blocks subsequent attempts for 60s,PASS,Medium
+TC-08,Auth,Session invalidation after demo reset,Epoch mismatch terminates session,auth_epoch mismatch clears session immediately,PASS,High
+TC-09,Auth,Teacher accessing admin page via navigation,Redirected to teacher dashboard,Teacher redirected to My Dashboard,PASS,Critical
+TC-10,Auth,Teacher editing another teacher lecture,PermissionError raised and edit rejected,PermissionError raised and edit blocked,PASS,Critical
+TC-11,Take Attendance,Roster load for assigned class XI-A Math,30 active students loaded starting Present,30 students loaded all marked Present,PASS,Critical
+TC-12,Take Attendance,Marking 3 students Absent,Calculates 27 Present 3 Absent 90%,Summary shows 27 P 3 A and 90.0%,PASS,Critical
+TC-13,Take Attendance,Saving attendance record,Session and records created in SQLite,Session ID generated and 30 records saved,PASS,Critical
+TC-14,Take Attendance,Duplicate attendance save attempt,Rejected with warning to use Edit Attendance,Rejected with error message,PASS,High
+TC-15,Take Attendance,Future date selection,Rejected with validation error,Blocked with future date error,PASS,High
+TC-16,Take Attendance,Attendance entry on holiday,Blocked with holiday warning,Blocked with holiday message,PASS,High
+TC-17,Attendance History,Reopen and correct attendance lecture,Status updated and change logged in audit table,Student updated from A to P and audit change recorded,PASS,Critical
+TC-18,Attendance History,Correction without reason,Rejected with reason prompt,Rejected with reason required prompt,PASS,Medium
+TC-19,Attendance History,Concurrent / stale edit collision,Rejected due to updated_at timestamp mismatch,Optimistic locking rejects stale revision,PASS,High
+TC-20,Attendance History,Lecture cancellation and restoration,Cancelled lecture excluded from reports and restorable,Cancelled lecture excluded and restore works,PASS,High
+TC-21,Calculations,Basic attendance percentage formula,Present / Recorded Lectures * 100,66.67% and 33.33% verified independently,PASS,Critical
+TC-22,Calculations,Missing records never imply absence,Unrecorded lectures not counted as absences,Unrecorded dates/periods omitted from denominator,PASS,Critical
+TC-23,Calculations,Holiday exclusion from metrics,Holiday dates omitted from reports and metrics,Holidays completely omitted from calculation,PASS,High
+TC-24,Calculations,Student search with NaN GR numbers,Search completes without boolean indexing failure,na=False added to prevent NaN filter failure,PASS,Medium
+TC-25,Reports,Class attendance cards with 0 lectures,ZeroDivisionError prevented gracefully,ZeroDivisionError guarded with fallback 0.00%,PASS,Medium
+TC-26,Reports,Monthly matrix lecture sequencing,Lectures ordered by period with P/A markers,P/A/– markers displayed in period sequence,PASS,High
+TC-27,Admin,Duplicate GR number check (case-insensitive),Case variants rejected,Case variants rejected with duplicate error,PASS,High
+TC-28,Admin,Duplicate roll number in division/stream,Duplicate roll number rejected,Integrity constraint rejects duplicate roll,PASS,High
+TC-29,Admin,Teacher account creation minimum password length,Reject password under 8 characters,Password under 8 characters rejected,PASS,Medium
+TC-30,Excel,Export with formula injection characters (= + - @),Escaped with leading single quote,Prepended with single quote to prevent execution,PASS,High
+TC-31,Excel,Export formatting freeze panes and conditional styling,Panes frozen at C7 with red highlight under threshold,Freeze panes and conditional formatting applied,PASS,Medium
+TC-32,Excel,Import student workbook with duplicates and valid rows,Valid rows imported and duplicates/invalids skipped,Valid imported and duplicates counted accurately,PASS,High
+TC-33,Dashboard,Class name with hyphens in schedule shortcut,Graceful rsplit without unpack crash,rsplit('-', 1) prevents unpacking errors,PASS,Medium
+TC-34,Performance,Smoke test 2000 students 300000 records,Report queries complete under 1 second,Report query 0.57s and history 0.46s,PASS,High
+TC-35,Database,SQLite PRAGMA integrity and foreign keys,Zero corruption and zero FK violations,PRAGMA integrity_check ok and 0 FK errors,PASS,Critical
